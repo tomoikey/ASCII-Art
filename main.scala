@@ -9,7 +9,7 @@ import javax.imageio.ImageIO
     .read(new File(args.head))
     .rescaleImage(args(1).toDouble)
     .imageToGrayScale
-    .generateAscii
+    .generateAsciiArt
 )
 
 extension (image: BufferedImage)
@@ -41,7 +41,7 @@ extension (image: BufferedImage)
     grayImage
   }
 
-  def generateAscii: String = (for (i <- 0 until image.getHeight)
+  def generateAsciiArt: String = (for (i <- 0 until image.getHeight)
     yield (for (j <- 0 until image.getWidth) yield {
       val color = new Color(image.getRGB(j, i))
       RGB(color.getRed, color.getGreen, color.getBlue).toAscii()
