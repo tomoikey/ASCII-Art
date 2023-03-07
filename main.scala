@@ -43,19 +43,19 @@ extension (image: BufferedImage)
 
   def asciiArt: String = (for (i <- 0 until image.getHeight)
     yield (for (j <- 0 until image.getWidth)
-      yield AsciiArtConverter(new Color(image.getRGB(j, i))).toAsciiArt)
+      yield AsciiArtConverter(new Color(image.getRGB(j, i))).toChar)
       .mkString(" ")).mkString("\n")
 
 final case class AsciiArtConverter(color: Color):
   assert(color.getRed == color.getGreen && color.getGreen == color.getBlue)
-  private val charConversion: PartialFunction[Int, String] = {
-    case x if x < 32  => " "
-    case x if x < 64  => "."
-    case x if x < 96  => ","
-    case x if x < 128 => "-"
-    case x if x < 160 => "="
-    case x if x < 192 => "1"
-    case x if x < 224 => "@"
-    case _            => "W"
+  private val charConversion: PartialFunction[Int, Char] = {
+    case x if x < 32  => ' '
+    case x if x < 64  => '.'
+    case x if x < 96  => ','
+    case x if x < 128 => '-'
+    case x if x < 160 => '='
+    case x if x < 192 => '1'
+    case x if x < 224 => '@'
+    case _            => 'W'
   }
-  def toAsciiArt: String = charConversion(color.getRed)
+  def toChar: Char = charConversion(color.getRed)
