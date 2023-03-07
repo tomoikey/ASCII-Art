@@ -42,13 +42,12 @@ extension (image: BufferedImage)
   }
 
   def generateAsciiArt: String = (for (i <- 0 until image.getHeight)
-    yield (for (j <- 0 until image.getWidth) yield {
-      val color = new Color(image.getRGB(j, i))
-      RGB(color.getRed, color.getGreen, color.getBlue).toAscii()
-    }).mkString(" ")).mkString("\n")
+    yield (for (j <- 0 until image.getWidth)
+      yield AsciiArtConverter(new Color(image.getRGB(j, i))).toAsciiArt())
+      .mkString(" ")).mkString("\n")
 
-case class RGB(red: Int, green: Int, blue: Int) {
-  assert(red == green && green == blue)
+case class AsciiArtConverter(color: Color) {
+  assert(color.getRed == color.getGreen && color.getGreen == color.getBlue)
   private val charConversion: PartialFunction[Int, String] = {
     case x if x < 32  => " "
     case x if x < 64  => "."
@@ -59,5 +58,5 @@ case class RGB(red: Int, green: Int, blue: Int) {
     case x if x < 224 => "@"
     case _            => "W"
   }
-  def toAscii(): String = charConversion(red)
+  def toAsciiArt(): String = charConversion(color.getRed)
 }
