@@ -8,8 +8,8 @@ import javax.imageio.ImageIO
   ImageIO
     .read(new File(args.head))
     .rescaleImage(args(1).toDouble)
-    .imageToGrayScale
-    .generateAsciiArt
+    .toGrayScale
+    .asciiArt
 )
 
 extension (image: BufferedImage)
@@ -28,7 +28,7 @@ extension (image: BufferedImage)
     newImage
   }
 
-  def imageToGrayScale: BufferedImage = {
+  def toGrayScale: BufferedImage = {
     val grayImage = image
     for (i <- 0 until image.getHeight) for (j <- 0 until image.getWidth) {
       val rgb = grayImage.getRGB(i, j)
@@ -41,7 +41,7 @@ extension (image: BufferedImage)
     grayImage
   }
 
-  def generateAsciiArt: String = (for (i <- 0 until image.getHeight)
+  def asciiArt: String = (for (i <- 0 until image.getHeight)
     yield (for (j <- 0 until image.getWidth)
       yield AsciiArtConverter(new Color(image.getRGB(j, i))).toAsciiArt())
       .mkString(" ")).mkString("\n")
