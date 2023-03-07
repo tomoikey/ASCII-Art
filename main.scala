@@ -6,21 +6,20 @@ import javax.imageio.ImageIO
 @main def main(args: String*) = println(
   ImageIO
     .read(new File(args.head))
-    .rescaleImage
+    .rescaleImage(args(1).toDouble)
     .imageToGrayScale
     .generateAscii
 )
 
 extension (image: BufferedImage)
-  def rescaleImage: BufferedImage = {
+  def rescaleImage(scale: Double): BufferedImage = {
     val (originalWidth, originalHeight) =
       (image.getWidth.toDouble, image.getHeight.toDouble)
     val (widthScale, heightScale) =
       if (originalWidth > originalHeight) (1d, originalHeight / originalWidth)
       else (originalWidth / originalHeight, 1d)
-    val length = 110d
     val (newWight, newHeight) =
-      ((length * widthScale).toInt, (length * heightScale).toInt)
+      ((scale * widthScale).toInt, (scale * heightScale).toInt)
     val newImage = new BufferedImage(newWight, newHeight, image.getType)
     val scaled = image.getScaledInstance(
       newWight,
