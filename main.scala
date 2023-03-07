@@ -6,7 +6,7 @@ import javax.imageio.ImageIO
 
 @main def main(args: String*): Unit = println(
   ImageIO
-    .read(new File(args.head))
+    .read(File(args.head))
     .rescale(args(1).toDouble)
     .toGrayScale
     .asciiArt
@@ -43,7 +43,7 @@ extension (image: BufferedImage)
 
   def asciiArt: String = (for (i <- 0 until image.getHeight)
     yield (for (j <- 0 until image.getWidth)
-      yield AsciiArtConverter(new Color(image.getRGB(j, i))).toChar)
+      yield AsciiArtConverter(Color(image.getRGB(j, i))).toChar)
       .mkString(" ")).mkString("\n")
 
 final case class AsciiArtConverter(color: Color):
