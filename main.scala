@@ -1,6 +1,7 @@
 import java.awt.Color
 import java.awt.image.BufferedImage
 import java.io.File
+import java.awt.Image.SCALE_AREA_AVERAGING
 import javax.imageio.ImageIO
 
 @main def main(args: String*) = println(
@@ -21,19 +22,15 @@ extension (image: BufferedImage)
     val (newWight, newHeight) =
       ((scale * widthScale).toInt, (scale * heightScale).toInt)
     val newImage = new BufferedImage(newWight, newHeight, image.getType)
-    val scaled = image.getScaledInstance(
-      newWight,
-      newHeight,
-      java.awt.Image.SCALE_AREA_AVERAGING
-    )
+    val scaled =
+      image.getScaledInstance(newWight, newHeight, SCALE_AREA_AVERAGING)
     newImage.getGraphics.drawImage(scaled, 0, 0, newWight, newHeight, null)
     newImage
   }
 
   def imageToGrayScale: BufferedImage = {
     val grayImage = image
-    val (height, width) = (image.getHeight, image.getWidth)
-    for (i <- 0 until height) for (j <- 0 until width) {
+    for (i <- 0 until image.getHeight) for (j <- 0 until image.getWidth) {
       val rgb = grayImage.getRGB(i, j)
       val (a, r, g, b) =
         ((rgb >> 24) & 0xff, (rgb >> 16) & 0xff, (rgb >> 8) & 0xff, rgb & 0xff)
@@ -44,15 +41,11 @@ extension (image: BufferedImage)
     grayImage
   }
 
-  def generateAscii: String = {
-    val height = image.getHeight
-    val width = image.getWidth
-    (for (i <- 0 until height) yield (for (j <- 0 until width) yield {
+  def generateAscii: String = (for (i <- 0 until image.getHeight)
+    yield (for (j <- 0 until image.getWidth) yield {
       val color = new Color(image.getRGB(j, i))
-      val rgb = RGB(color.getRed, color.getGreen, color.getBlue)
-      rgb.toAscii()
+      RGB(color.getRed, color.getGreen, color.getBlue).toAscii()
     }).mkString(" ")).mkString("\n")
-  }
 
 case class RGB(red: Int, green: Int, blue: Int) {
   assert(red == green && green == blue)
