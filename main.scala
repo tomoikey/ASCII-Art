@@ -21,7 +21,7 @@ extension (image: BufferedImage)
       else (originalWidth / originalHeight, 1d)
     val (newWidth, newHeight) =
       ((scale * widthScale).toInt, (scale * heightScale).toInt)
-    val newImage = new BufferedImage(newWidth, newHeight, image.getType)
+    val newImage = BufferedImage(newWidth, newHeight, image.getType)
     val scaled =
       image.getScaledInstance(newWidth, newHeight, SCALE_AREA_AVERAGING)
     newImage.getGraphics.drawImage(scaled, 0, 0, newWidth, newHeight, null)
