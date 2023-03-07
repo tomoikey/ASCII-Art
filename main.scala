@@ -19,12 +19,12 @@ extension (image: BufferedImage)
     val (widthScale, heightScale) =
       if (originalWidth > originalHeight) (1d, originalHeight / originalWidth)
       else (originalWidth / originalHeight, 1d)
-    val (newWight, newHeight) =
+    val (newWidth, newHeight) =
       ((scale * widthScale).toInt, (scale * heightScale).toInt)
-    val newImage = new BufferedImage(newWight, newHeight, image.getType)
+    val newImage = new BufferedImage(newWidth, newHeight, image.getType)
     val scaled =
-      image.getScaledInstance(newWight, newHeight, SCALE_AREA_AVERAGING)
-    newImage.getGraphics.drawImage(scaled, 0, 0, newWight, newHeight, null)
+      image.getScaledInstance(newWidth, newHeight, SCALE_AREA_AVERAGING)
+    newImage.getGraphics.drawImage(scaled, 0, 0, newWidth, newHeight, null)
     newImage
   }
 
