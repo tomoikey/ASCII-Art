@@ -7,13 +7,13 @@ import javax.imageio.ImageIO
 @main def main(args: String*) = println(
   ImageIO
     .read(new File(args.head))
-    .rescaleImage(args(1).toDouble)
+    .rescale(args(1).toDouble)
     .toGrayScale
     .asciiArt
 )
 
 extension (image: BufferedImage)
-  def rescaleImage(scale: Double): BufferedImage = {
+  def rescale(scale: Double): BufferedImage = {
     val (originalWidth, originalHeight) =
       (image.getWidth.toDouble, image.getHeight.toDouble)
     val (widthScale, heightScale) =
