@@ -46,7 +46,7 @@ extension (image: BufferedImage)
       yield AsciiArtConverter(new Color(image.getRGB(j, i))).toAsciiArt())
       .mkString(" ")).mkString("\n")
 
-case class AsciiArtConverter(color: Color) {
+final case class AsciiArtConverter(color: Color) {
   assert(color.getRed == color.getGreen && color.getGreen == color.getBlue)
   private val charConversion: PartialFunction[Int, String] = {
     case x if x < 32  => " "
