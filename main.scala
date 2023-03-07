@@ -4,7 +4,7 @@ import java.io.File
 import java.awt.Image.SCALE_AREA_AVERAGING
 import javax.imageio.ImageIO
 
-@main def main(args: String*) = println(
+@main def main(args: String*): Unit = println(
   ImageIO
     .read(new File(args.head))
     .rescale(args(1).toDouble)
@@ -43,10 +43,10 @@ extension (image: BufferedImage)
 
   def asciiArt: String = (for (i <- 0 until image.getHeight)
     yield (for (j <- 0 until image.getWidth)
-      yield AsciiArtConverter(new Color(image.getRGB(j, i))).toAsciiArt())
+      yield AsciiArtConverter(new Color(image.getRGB(j, i))).toAsciiArt)
       .mkString(" ")).mkString("\n")
 
-final case class AsciiArtConverter(color: Color) {
+final case class AsciiArtConverter(color: Color):
   assert(color.getRed == color.getGreen && color.getGreen == color.getBlue)
   private val charConversion: PartialFunction[Int, String] = {
     case x if x < 32  => " "
@@ -58,5 +58,4 @@ final case class AsciiArtConverter(color: Color) {
     case x if x < 224 => "@"
     case _            => "W"
   }
-  def toAsciiArt(): String = charConversion(color.getRed)
-}
+  def toAsciiArt: String = charConversion(color.getRed)
