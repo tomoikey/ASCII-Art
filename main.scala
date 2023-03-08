@@ -7,8 +7,8 @@ import javax.imageio.ImageIO
 @main def main(args: String*): Unit = println(
   ImageIO
     .read(File(args.head))
-    .rescale(args(1).toDouble)
     .toGrayScale
+    .rescale(args(1).toDouble)
     .asciiArt
 )
 
@@ -30,19 +30,25 @@ extension (image: BufferedImage)
 
   def toGrayScale: BufferedImage = {
     val grayImage = image
-    for (i <- 0 until image.getHeight) for (j <- 0 until image.getWidth) {
-      val rgb = grayImage.getRGB(i, j)
-      val (a, r, g, b) =
-        ((rgb >> 24) & 0xff, (rgb >> 16) & 0xff, (rgb >> 8) & 0xff, rgb & 0xff)
-      val gamma =
-        (0.299 * r + 0.587 * g + 0.114 * b).toInt // ITU-R Rec BT.601規格
-      grayImage.setRGB(i, j, (a << 24) + (gamma << 16) + (gamma << 8) + gamma)
-    }
+    for (i <- 0 until grayImage.getWidth)
+      for (j <- 0 until grayImage.getHeight) {
+        val rgb = grayImage.getRGB(i, j)
+        val (a, r, g, b) =
+          (
+            (rgb >> 24) & 0xff,
+            (rgb >> 16) & 0xff,
+            (rgb >> 8) & 0xff,
+            rgb & 0xff
+          )
+        val gamma =
+          (0.299 * r + 0.587 * g + 0.114 * b).toInt // ITU-R Rec BT.601規格
+        grayImage.setRGB(i, j, (a << 24) + (gamma << 16) + (gamma << 8) + gamma)
+      }
     grayImage
   }
 
-  def asciiArt: String = (for (i <- 0 until image.getHeight)
-    yield (for (j <- 0 until image.getWidth)
+  def asciiArt: String = (for (i <- 0 until image.getHeight())
+    yield (for (j <- 0 until image.getWidth())
       yield AsciiArtConverter(Color(image.getRGB(j, i))).toChar)
       .mkString(" ")).mkString("\n")
 
