@@ -3,14 +3,17 @@ import java.awt.image.BufferedImage
 import java.io.File
 import java.awt.Image.SCALE_AREA_AVERAGING
 import javax.imageio.ImageIO
+import scala.util.Try
 
-@main def main(args: String*): Unit = println(
-  ImageIO
-    .read(File(args.head))
-    .toGrayScale
-    .rescale(args(1).toDouble)
-    .asciiArt
-)
+@main def main(args: String*): Unit = {
+  val result = for {
+    fileName <- args.headOption.toRight(Exception("ファイル名が入力されていません"))
+    scaleStr <- args.drop(1).headOption.toRight(Exception("Scaleが入力されていません"))
+    scale <- Try(scaleStr.toDouble).toEither
+    file <- Try(ImageIO.read(File(fileName))).toEither
+  } yield file.toGrayScale.rescale(scale).asciiArt
+  result.fold(e => println(s"入力が誤ってます: Cause[${e.getMessage}]"), println)
+}
 
 extension (image: BufferedImage)
   def rescale(scale: Double): BufferedImage = {
